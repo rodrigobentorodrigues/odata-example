@@ -1,15 +1,14 @@
 using BookStore.Configuration;
 using BookStore.Models;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BookStore
 {
@@ -30,8 +29,13 @@ namespace BookStore
                 options.UseInMemoryDatabase("BookOData");
                 options.EnableSensitiveDataLogging();
             });
-            services.AddControllers().AddNewtonsoftJson();
-            services.AddOData();
+            services.AddControllers()
+                .AddNewtonsoftJson()
+                .AddOData((options) =>
+                {
+                    options.AddRouteComponents("api", ODataConfiguration.GetEdmModel());
+                    options.EnableQueryFeatures();
+                });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookStore", Version = "v1" });
@@ -57,9 +61,6 @@ namespace BookStore
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.EnableDependencyInjection();
-                endpoints.MapODataRoute("api", "api", ODataConfiguration.GetEdmModel());
-                endpoints.Select().Filter().Count().OrderBy().MaxTop(100);
                 endpoints.MapControllers();
             });
 

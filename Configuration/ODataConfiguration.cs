@@ -1,6 +1,6 @@
 ﻿using BookStore.Models;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 
 namespace BookStore.Configuration
 {
@@ -10,8 +10,8 @@ namespace BookStore.Configuration
         public static IEdmModel GetEdmModel()
         {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-            builder.EntitySet<Book>("Books");
-            builder.EntitySet<Press>("Presses");
+            builder.EntitySet<Book>(nameof(Book));
+            builder.EntitySet<Press>(nameof(Press));
             return builder.GetEdmModel();
         }
 

@@ -9,8 +9,8 @@ namespace BookStore.Configuration
         {
             var descriptor = context.ApiDescription;
 
-            // Include params something in routes that start with 'api'
-            if (descriptor != null && descriptor.RelativePath.StartsWith("api"))
+            // Include params something in routes that start with 'api/book'
+            if (descriptor != null && descriptor.RelativePath.StartsWith("api/Book"))
             {
                 operation.Parameters.Add(new OpenApiParameter
                 {
